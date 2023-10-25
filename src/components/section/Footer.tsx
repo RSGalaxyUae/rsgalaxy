@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { type PropsWithChildren, type ReactNode } from 'react'
 import Logo from '../shared/Logo'
 import Link from 'next/link'
 import { services } from '@/data/Services'
@@ -32,7 +32,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center pb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center pb-10 px-5">
                 <div className='max-w-xs'>
                     <FooterTitle>Address</FooterTitle>
                     <div className='flex gap-3'>
@@ -51,38 +51,40 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div>
-                    <FooterTitle>Company</FooterTitle>
+                <div className='grid grid-cols-2'>
                     <div>
-                        <FooterLink>About Us</FooterLink>
-                        <FooterLink>Clients</FooterLink>
-                        <FooterLink>Enquiries</FooterLink>
-                        <FooterLink>Careers</FooterLink>
-                        <FooterLink>Contact Us</FooterLink>
+                        <FooterTitle>Company</FooterTitle>
+                        <div>
+                            <FooterLink>About Us</FooterLink>
+                            <FooterLink>Clients</FooterLink>
+                            <FooterLink>Enquiries</FooterLink>
+                            <FooterLink>Careers</FooterLink>
+                            <FooterLink>Contact Us</FooterLink>
+                        </div>
+                    </div>
+
+                    <div>
+                        <FooterTitle>Our Solutions</FooterTitle>
+
+                        {
+                            services.map(ser => {
+                                return <FooterLink key={nanoid()}>{ser.title}</FooterLink>
+                            })
+                        }
                     </div>
                 </div>
 
-                <div>
-                    <FooterTitle>Our Solutions</FooterTitle>
-
-                    {
-                        services.map(ser => {
-                            return <FooterLink key={nanoid()}>{ser.title}</FooterLink>
-                        })
-                    }
-                </div>
-
-                <div>
-                    <FooterTitle>Follow Us</FooterTitle>
-                    <div className='flex gap-3'>
-                        <Button  size={'icon'}><FacebookIcon/></Button>
-                        <Button  size={'icon'}><InstagramIcon/></Button>
-                        <Button  size={'icon'}><LinkedinIcon/></Button>
+                <div className='w-full'>
+                    {/* <FooterTitle>Follow Us</FooterTitle> */}
+                    <div className='flex gap-3 justify-evenly md:justify-center w-full'> 
+                        <Button size={'icon'}><FacebookIcon /></Button>
+                        <Button size={'icon'}><InstagramIcon /></Button>
+                        <Button size={'icon'}><LinkedinIcon /></Button>
                     </div>
                 </div>
             </div>
-            <Separator/>
-            <div className='py-5 flex items-center justify-center'>
+            <Separator />
+            <div className='py-5 flex items-center justify-center '>
                 <p>All rights reserverd  </p>
             </div>
         </footer>
