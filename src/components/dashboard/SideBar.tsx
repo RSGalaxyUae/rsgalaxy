@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { type PropsWithChildren, type ReactElement } from 'react';
 import Logo from '../shared/Logo'
-import { Archive, BadgeDollarSign, File, FileBarChart2, LayoutDashboard, Link2, Mail, MessageSquareDashed, Settings, ShoppingBag, Sparkles, Users } from 'lucide-react'
+import { LayoutDashboard, Settings, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { cn } from '@/lib/utils'

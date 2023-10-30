@@ -2,7 +2,7 @@
 import { CreateEnquirySchema, DeleteEnquirySchema, DeleteManyEnquirySchema, GetEnquiryByIdSchema, PaginateEnquiryListSchema, UpdateEnquirySchema } from './../../../schema/EnquirySchema';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from './../trpc';
 import { TRPCError } from '@trpc/server';
-import { Enquiry, Prisma } from '@prisma/client';
+import { type Enquiry, type Prisma } from '@prisma/client';
 import { paginate } from '@/lib/utils';
 
 
