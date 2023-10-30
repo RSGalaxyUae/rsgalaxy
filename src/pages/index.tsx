@@ -15,6 +15,7 @@ import CertificateSliderSection from "@/components/section/CertificateSliderSect
 import CtaSection from "@/components/section/CtaSection";
 import AboutSection from "@/components/section/AboutSection";
 import FeaturesSection from "@/components/section/FeaturesSection";
+import EnquirySection from "@/components/section/EnquirySection";
 
 
 
@@ -27,24 +28,30 @@ export default function Home() {
     <>
       <HeroSection />
 
-    {/* FEATURE SECTION */}
+      {/* FEATURE SECTION */}
 
-     <FeaturesSection/>
+      <FeaturesSection />
 
 
       {/* ABOUT SECTION */}
-     <AboutSection/>
+      <AboutSection />
 
 
       {/* Service section */}
-      <AllServicesSection/>
+      <AllServicesSection />
 
+
+      <div className="my-20"></div>
+      {/* CTA Section */}
+      <CtaSection />
 
       {/* CERTIFICATE SECTION */}
-      <CertificateSliderSection/>
+      <CertificateSliderSection className="mt-0" />
 
-      {/* CTA Section */}
-      <CtaSection/>
+
+
+      {/* CONTACT SECTION */}
+      <EnquirySection />
     </>
   );
 }

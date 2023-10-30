@@ -1,6 +1,7 @@
 import AboutSection from '@/components/section/AboutSection'
 import CertificateSliderSection from '@/components/section/CertificateSliderSection'
 import CtaSection from '@/components/section/CtaSection'
+import EnquirySection from '@/components/section/EnquirySection'
 import FeaturesSection from '@/components/section/FeaturesSection'
 import PageHeader from '@/components/shared/PageHeader'
 import { CardDescription, CardTitle } from '@/components/ui/card'
@@ -44,6 +45,7 @@ const AboutPage = () => {
 
             <CertificateSliderSection/>
             <CtaSection/>
+            <EnquirySection/>
         </>
     )
 }

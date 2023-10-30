@@ -10,7 +10,7 @@ const Typography = () => {
 
 const SectionTitle = React.forwardRef<React.HTMLAttributes<HTMLHeadingElement>, React.HTMLAttributes<HTMLHeadingElement>>(
     ({className, ...props}, ref) => {
-        return <h1 className={cn([
+        return <h2 className={cn([
             'text-3xl md:text-4xl font-bold',
             className
         ])} {...props} />

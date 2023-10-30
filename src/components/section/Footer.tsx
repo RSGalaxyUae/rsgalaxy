@@ -6,6 +6,9 @@ import { nanoid } from 'nanoid'
 import { Button } from '../ui/button'
 import { FacebookIcon, InstagramIcon, LinkedinIcon } from 'lucide-react'
 import { Separator } from '../ui/separator'
+import { api } from '@/utils/api'
+import { GeneralSettingOutput } from '@/schema/settingSchema'
+import { InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 
 
 
@@ -24,6 +27,7 @@ const FooterLink = ({
 }
 
 const Footer = () => {
+    const { data, isLoading } = api.setting.get.useQuery<GeneralSettingOutput>({ type: 'GENERAL_SETTING' });
     return (
         <footer className='bg-black text-white'>
             <div className='py-10'>
@@ -37,7 +41,7 @@ const Footer = () => {
                     <FooterTitle>Address</FooterTitle>
                     <div className='flex gap-3'>
                         <span className='text-gray-500'>Address</span>
-                        <span>15th Floor, Dusit Thani Complex, Offices Building, Sultan Bin Zayed The First St (Muroor road), Opposite Al Jazira Club, P.O. Box. 2286, Abu Dhabi, U.A.E.</span>
+                        <span>{``}</span>
                     </div>
 
                     <div className="flex gap-3">
@@ -55,11 +59,11 @@ const Footer = () => {
                     <div>
                         <FooterTitle>Company</FooterTitle>
                         <div>
-                            <FooterLink>About Us</FooterLink>
-                            <FooterLink>Clients</FooterLink>
-                            <FooterLink>Enquiries</FooterLink>
-                            <FooterLink>Careers</FooterLink>
-                            <FooterLink>Contact Us</FooterLink>
+                            <FooterLink href='/about'>About Us</FooterLink>
+                            <FooterLink href="#">Clients</FooterLink>
+                            <FooterLink href="#">Enquiries</FooterLink>
+                            <FooterLink href="#">Careers</FooterLink>
+                            <FooterLink href="/contact">Contact Us</FooterLink>
                         </div>
                     </div>
 
@@ -68,7 +72,7 @@ const Footer = () => {
 
                         {
                             services.map(ser => {
-                                return <FooterLink key={nanoid()}>{ser.title}</FooterLink>
+                                return <FooterLink key={nanoid()} href={ser.href}>{ser.title}</FooterLink>
                             })
                         }
                     </div>
@@ -77,15 +81,16 @@ const Footer = () => {
                 <div className='w-full'>
                     {/* <FooterTitle>Follow Us</FooterTitle> */}
                     <div className='flex gap-3 justify-evenly md:justify-center w-full'> 
-                        <Button size={'icon'}><FacebookIcon /></Button>
-                        <Button size={'icon'}><InstagramIcon /></Button>
-                        <Button size={'icon'}><LinkedinIcon /></Button>
+                    <Link href={data?.value.socialLinks?.facebook ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.facebook)} ><FacebookIcon className='w-4 h-4'/></Button></Link>
+                        <Link href={data?.value.socialLinks?.twitter ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.twitter)} ><TwitterLogoIcon/></Button></Link>
+                        <Link href={data?.value.socialLinks?.instagram ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.instagram)} ><InstagramLogoIcon/></Button></Link>
+                        <Link href={data?.value.socialLinks?.linkedIn ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.linkedIn)} ><LinkedInLogoIcon/></Button></Link>
                     </div>
                 </div>
             </div>
             <Separator />
             <div className='py-5 flex items-center justify-center '>
-                <p>All rights reserverd  </p>
+                <p>{`Copyright ${new Date(Date.now()).getFullYear()}`}, RSGalaxy, All rights reserverd </p>
             </div>
         </footer>
     )

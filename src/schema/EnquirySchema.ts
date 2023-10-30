@@ -1,7 +1,8 @@
-import { string, z } from "zod";
+import { z } from "zod";
 import { WithPagination } from "./helpers/WithPagination";
 import { WithSearch } from "./helpers/WithSearch";
 import { WithSorting } from "./helpers/WithSorting";
+import { serviceCodesArray } from "@/data/Services";
 
 export const EnquiryTypesArray = [
     'GENERAL',
@@ -21,8 +22,7 @@ export const GeneralEnquirySchema = z.object({
 })
 
 export const ServiceEnquirySchema = z.object({
-    service:z.string(),
-    phone: z.string().optional(),
+    serviceId: z.enum(serviceCodesArray),
     message: z.string().optional()
 })
 
@@ -34,6 +34,7 @@ export const CreateEnquirySchema = z.object({
     name: z.string(),
     email: z.string().email(),
     type: EnquiryTypeEnumSchema,
+    phone: z.string().optional(),
     content: GeneralEnquirySchema
             .or(ServiceEnquirySchema)
 })

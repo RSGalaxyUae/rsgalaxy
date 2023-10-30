@@ -1,16 +1,17 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { type PropsWithChildren } from 'react'
 import Logo from '../shared/Logo'
 import { NavigationMenu, NavigationMenuList, navigationMenuTriggerStyle, NavigationMenuItem, NavigationMenuLink, NavigationMenuTrigger, NavigationMenuContent, } from '../ui/navigation-menu'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { Card, CardContent } from '../ui/card'
 import { services } from '@/data/Services'
 import { nanoid } from 'nanoid'
 import { Button } from '../ui/button'
-import { FacebookIcon, InstagramIcon, LinkedinIcon, MenuIcon, PhoneCallIcon } from 'lucide-react'
+import { MenuIcon, PhoneCallIcon } from 'lucide-react'
 import MobileNav from './MobileNav'
+import { api } from '@/utils/api'
+import { type GeneralSettingOutput } from '@/schema/settingSchema'
 
 type NavLinkProps = {
   children?: React.ReactNode;
@@ -137,26 +138,26 @@ const Menu = () => {
 }
 
 const DesktopNav = () => {
+  const { data, isLoading } = api.setting.get.useQuery<GeneralSettingOutput>({ type: 'GENERAL_SETTING' })
   return (
-    <nav className='flex items-center px-5 py-3 z-50 relative justify-between'>
-      <div className=' flex items-center gap-10'>
-        <Logo />
-        <div className='hidden md:block'><Menu /></div>
-      </div>
-      <div className=' block md:hidden'>
-        <MobileNav
-        trigger={<Button variant={'outline'} size={'icon'}><MenuIcon/></Button>} 
-         />
-      </div>
-      <div className=' items-center gap-2 hidden md:flex'>
-        <Button className='space-x-2'><PhoneCallIcon /> <span>+971 2345678902</span></Button>
-        <div className='flex gap-3'>
-          <Button size={'icon'}><FacebookIcon /></Button>
-          <Button size={'icon'}><InstagramIcon /></Button>
-          <Button size={'icon'}><LinkedinIcon /></Button>
+    <div className='py-8 bg-white '>
+      <nav className='fixed top-0 left-0 w-full z-50 bg-white/30 backdrop-blur scroll-m-10 border-b border-primary/30'>
+        <div className='flex items-center px-5 py-3 z-50 relative justify-between'>
+          <div className=' flex items-center gap-10'>
+            <Link href="/"><Logo /></Link>
+            <div className='hidden md:block'><Menu /></div>
+          </div>
+          <div className=' block md:hidden'>
+            <MobileNav
+              trigger={<Button variant={'outline'} size={'icon'}><MenuIcon /></Button>}
+            />
+          </div>
+          <div className=' items-center gap-2 hidden md:flex'>
+            <Button disabled={!Boolean(data?.value.contact?.phone)} className='space-x-2'><PhoneCallIcon /> <span>{data?.value.contact?.phone}</span></Button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }
 

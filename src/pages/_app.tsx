@@ -8,7 +8,9 @@ import "@/styles/globals.css";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import DefaultLayout from "@/components/layout/DefaultLayout";
+import 'react-modern-drawer/dist/index.css'
+import { Toaster } from "@/components/ui/toaster";
+import Layout from "@/components/layout/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,9 +18,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <DefaultLayout>
-      <Component {...pageProps} />
-      </DefaultLayout>
+      <Toaster />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   );
 };

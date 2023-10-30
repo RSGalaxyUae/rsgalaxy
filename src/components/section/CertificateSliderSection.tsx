@@ -5,12 +5,15 @@ import React from 'react'
 import Slider from 'react-slick'
 import { SectionDescription, SectionTitle } from '../ui/Typography'
 import Overlay from '../shared/Overlay'
+import { cn } from '@/lib/utils'
 
 
-const CertificateSliderSection = () => {
+const CertificateSliderSection = ({
+    className
+}: {className?: string}) => {
 
     return (
-        <section className='overflow-hidden bg-primary/5 bg-center bg-fixed bg-cover bg-no-repeat mt-20' style={{ backgroundImage: `url(/assets/images/cert-bg.jpg)` }}>
+        <section className={cn(['overflow-hidden bg-primary/5 bg-center bg-fixed bg-cover bg-no-repeat mt-20', className])} style={{ backgroundImage: `url(/assets/images/cert-bg.jpg)` }}>
             <Slider>
                 {
                     certificates.map(cert => {
