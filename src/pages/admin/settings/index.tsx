@@ -7,11 +7,11 @@ import { Loader2Icon } from 'lucide-react'
 import React from 'react'
 
 const SettingsPage = () => {
-  const {data, } = api.setting.get.useQuery({type: 'GENERAL_SETTING'})
+  const {data, isLoading} = api.setting.get.useQuery({type: 'GENERAL_SETTING'})
   return (
     <SettingsLayout>
       {
-        (data && data !== null) ? <GeneralSettingForm data={convertNullToUndefined(data)} /> : <div><Loader2Icon className='animate-spin w-10 h-10' /></div>
+        !isLoading ? <GeneralSettingForm data={convertNullToUndefined(data)} /> : <div><Loader2Icon className='animate-spin w-10 h-10' /></div>
       }
     </SettingsLayout>
   )
