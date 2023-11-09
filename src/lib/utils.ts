@@ -82,7 +82,7 @@ export function formatPhoneNumber(input: string): string {
     return formattedNumber;
   } else {
     // Return the original input if it doesn't represent a valid phone number
-    console.warn('Invalid phone number format:', input);
+    // console.warn('Invalid phone number format:', input);
     return input;
   }
 }
