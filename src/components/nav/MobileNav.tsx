@@ -64,7 +64,7 @@ const MobileNav = ({
                             <div className='px-2 spay'>
                                 {
                                     services.map(service => {
-                                        return <NavItem key={nanoid()}>{service.title}</NavItem>
+                                        return <NavItem key={nanoid()} href={service.href}>{service.title}</NavItem>
                                     })
                                 }
                             </div>
@@ -73,6 +73,7 @@ const MobileNav = ({
 
                     <NavItem href='/about'>About</NavItem>
                     <NavItem href='/contact'>Contact</NavItem>
+                    <NavItem href='/docs'>Documents</NavItem>
                 </div>
 
                 {/* <div>

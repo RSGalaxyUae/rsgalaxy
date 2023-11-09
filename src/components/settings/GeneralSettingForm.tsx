@@ -1,30 +1,44 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CreateSettingInput, CreateSettingSchema, UpdateSettingInput, UpdateSettingSchema } from '@/schema/settingSchema'
+import { type CreateSettingInput, CreateSettingSchema, type UpdateSettingInput, UpdateSettingSchema, GeneralSettingOutput } from '@/schema/settingSchema'
 import { api } from '@/utils/api'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { Separator } from '../ui/separator'
-import { useEffect } from 'react'
 import PhoneInput from '../shared/PhoneInput'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
+import { cn, convertNullToUndefined } from '@/lib/utils'
 
 
-const GeneralSettingForm = () => {
-  const { data: generalSetting, isLoading } = api.setting.get.useQuery({ type: 'GENERAL_SETTING' });
+const GeneralSettingForm = ({
+  data
+}: {
+  data?: GeneralSettingOutput
+}) => {
+  // const { data: data, isLoading } = api.setting.get.useQuery({ type: 'GENERAL_SETTING' });
   const createSettingMutation = api.setting.create.useMutation();
   const updateSettingMutation = api.setting.update.useMutation();
-  const settingCtx = api.useContext()
+  const settingCtx = api.useUtils();
   const { toast } = useToast();
 
 
-  const form = useForm<CreateSettingInput|UpdateSettingInput>({
-    resolver: zodResolver(generalSetting?.id ? UpdateSettingSchema: CreateSettingSchema),
-    defaultValues: { type: 'GENERAL_SETTING', lable: 'General Setting' }
+  const form = useForm<CreateSettingInput | UpdateSettingInput>({
+    resolver: zodResolver(data ? UpdateSettingSchema : CreateSettingSchema),
+    defaultValues: data ? convertNullToUndefined(data) : { type: 'GENERAL_SETTING', lable: 'General Setting' }
+  })
+
+  const { fields: phoneField, append } = useFieldArray({
+    name: "value.contact.phone",
+    control: form.control,
+  })
+  const emailField = useFieldArray({
+    name: "value.contact.email",
+    control: form.control,
   })
 
   function onSubmit(values: CreateSettingInput | UpdateSettingInput) {
@@ -33,10 +47,10 @@ const GeneralSettingForm = () => {
 
   async function save(value: CreateSettingInput | UpdateSettingInput) {
     try {
-      if (generalSetting) {
-        await updateSettingMutation.mutateAsync(value as UpdateSettingInput)
+      if (data) {
+        await updateSettingMutation.mutateAsync(convertNullToUndefined(value) as UpdateSettingInput)
       } else {
-        await createSettingMutation.mutateAsync(value as CreateSettingInput);
+        await createSettingMutation.mutateAsync(convertNullToUndefined(value) as CreateSettingInput);
       }
       toast({
         title: 'Setting saved successfully!',
@@ -50,88 +64,71 @@ const GeneralSettingForm = () => {
     }
   }
 
-  useEffect(() => {
-    if (generalSetting) {
-      Object.entries(generalSetting).map(([key, value]) => {
-        form.setValue(key as any, value)
-      })
-    }
-  }, [generalSetting])
 
   return (
     <Form  {...form}  >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-        {
-          generalSetting?.id && 
-          <FormField
-          control={form.control}
-          name='id'
-          render={({ field }) => (
-            <FormItem hidden>
-              <FormLabel>Lable</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        }
-
-        <FormField
-          control={form.control}
-          name='lable'
-          render={({ field }) => (
-            <FormItem hidden>
-              <FormLabel>Lable</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem hidden>
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='value.contact.email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type='email' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='value.contact.phone'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone</FormLabel>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <PhoneInput {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        
+        <div>
+          {emailField.fields.map((field, index) => (
+            <FormField
+              // control={form.control}
+              key={field.id}
+              name={`value.contact.email.${index}.value`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={cn(index !== 0 && "sr-only")}>
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => emailField.append({value: ""})}
+          >
+            Add Email
+          </Button>
+        </div>
+        <div>
+          {phoneField.map((field, index) => (
+            <FormField
+              // control={form.control}
+              key={field.id}
+              name={`value.contact.phone.${index}.value`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={cn(index !== 0 && "sr-only")}>
+                    Phones
+                  </FormLabel>
+                  <FormControl>
+                    <PhoneInput {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => append({value: ''})}
+          >
+            Add Phone
+          </Button>
+        </div>
+        
         <Separator></Separator>
         <FormField
           control={form.control}
@@ -186,7 +183,7 @@ const GeneralSettingForm = () => {
           )}
         />
 
-            <Separator className='my-4'/>
+        <Separator className='my-4' />
 
         <FormField
           control={form.control}
@@ -240,9 +237,9 @@ const GeneralSettingForm = () => {
             </FormItem>
           )}
         />
-        
+
         <div className='flex justify-end'>
-          <Button type="submit" disabled={createSettingMutation.isLoading || updateSettingMutation.isLoading || isLoading}>
+          <Button type="submit" disabled={createSettingMutation.isLoading || updateSettingMutation.isLoading}>
             {
               (createSettingMutation.isLoading || updateSettingMutation.isLoading) ?
                 <>

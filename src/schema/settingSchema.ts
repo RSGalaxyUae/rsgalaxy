@@ -14,8 +14,8 @@ export const GeneralSettingValueSchema = z.object({
         city: z.string().optional(),
         country: z.string().optional(),
         pincode: z.string().optional(),
-        phone: z.string().optional(),
-        email: z.string().optional()
+        phone: z.array(z.object({value: z.string()})).default([]),
+        email: z.array(z.object({value: z.string().email()})).default([])
     }).optional(),
     socialLinks: z.object({
         facebook: z.string().optional(),
@@ -31,8 +31,8 @@ export const IntegrationSettingSchema = z.object({
     }).optional(),
 
     tawkto: z.object({
-        propertyId: z.string(),
-        widgetId: z.string(),
+        propertyId: z.string().optional(),
+        widgetId: z.string().optional(),
         enabled: z.boolean().default(false)
     }).optional()
 })
@@ -51,7 +51,8 @@ const DefaultSetting = z.object({
 
 
 export const CreateIntegrationSettingSchema = DefaultSetting
-                                            .merge(z.object({value: IntegrationSettingSchema}));
+                                            .merge(z.object({
+                                                value: IntegrationSettingSchema}));
 
 export type CreateIntegrationSettingInput = z.infer<typeof CreateIntegrationSettingSchema>;
 
@@ -70,7 +71,7 @@ export type UpdateIntegrationSettingInput = z.infer<typeof UpdateIntegrationSche
 export const CreateSettingSchema = z.object({
     type: SettingsTypeSchema,
     lable: z.string(),
-    value: GeneralSettingValueSchema.or(IntegrationSettingSchema)
+    value: z.any().default({})
 })
 
 export type CreateSettingInput = z.TypeOf<typeof CreateSettingSchema>;

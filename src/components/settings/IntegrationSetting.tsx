@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CreateIntegrationSettingInput, CreateIntegrationSettingSchema, CreateSettingInput, CreateSettingSchema, UpdateIntegrationSchema, UpdateIntegrationSettingInput, UpdateSettingInput, UpdateSettingSchema } from '@/schema/settingSchema';
+import { type CreateIntegrationSettingInput, CreateIntegrationSettingSchema, type CreateSettingInput, UpdateIntegrationSchema, type UpdateIntegrationSettingInput, type UpdateSettingInput, IntegrationSettingOutput } from '@/schema/settingSchema';
 import { api } from '@/utils/api';
 import React, { useEffect } from 'react'
 import { useToast } from '../ui/use-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
 import PhoneInput from '../shared/PhoneInput';
@@ -13,6 +14,7 @@ import { Button } from '../ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Switch } from '../ui/switch';
+import { convertNullToUndefined } from '@/lib/utils';
 
 
 const SettingCard = ({
@@ -41,8 +43,12 @@ const SettingCard = ({
 }
 
 
-const IntegrationSetting = () => {
-    const { data: integrations, isLoading } = api.setting.get.useQuery({ type: 'INTEGRATION' });
+const IntegrationSetting = ({
+    integrations
+}: {
+    integrations?: IntegrationSettingOutput
+}) => {
+    // const { data:integrations, isLoading } = api.setting.get.useQuery<IntegrationSettingOutput>({ type: 'INTEGRATION' });
     const createSettingMutation = api.setting.create.useMutation();
     const updateSettingMutation = api.setting.update.useMutation();
     const { toast } = useToast();
@@ -50,7 +56,7 @@ const IntegrationSetting = () => {
 
     const form = useForm<CreateIntegrationSettingInput | UpdateIntegrationSettingInput>({
         resolver: zodResolver(integrations ? UpdateIntegrationSchema : CreateIntegrationSettingSchema),
-        defaultValues: { type: 'INTEGRATION', lable: 'Integrations' }
+        defaultValues: integrations ? {...convertNullToUndefined(integrations)} :  { type: 'INTEGRATION', lable: 'Integrations' }
     })
 
     function onSubmit(values: CreateSettingInput | UpdateSettingInput) {
@@ -59,6 +65,7 @@ const IntegrationSetting = () => {
     }
 
     async function save(value: CreateSettingInput | UpdateSettingInput) {
+        console.log({value})
         try {
             if (integrations) {
                 await updateSettingMutation.mutateAsync(value as UpdateSettingInput)
@@ -77,66 +84,18 @@ const IntegrationSetting = () => {
         }
     }
 
-    useEffect(() => {
-        if (integrations) {
-            Object.entries(integrations).map(([key, value]) => {
-                form.setValue(key as any, value)
-                console.log("Update: ", key, value)
-            })
-        }
-    }, [integrations])
 
-    useEffect(() => {
-        console.log({ ...form.formState.errors })
-    }, [form.formState])
+    // useEffect(() => {
+    //     console.log({ ...form.formState.errors }, {integrations: convertNullToUndefined(integrations)}, {defalu: form.formState.defaultValues})
+    //     console.log("===== VIEW ======");
+        
+    // }, [form.formState])
 
     return (
         <Form  {...form}  >
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-                {
-                    integrations?.id &&
-                    <FormField
-                        control={form.control}
-                        name='id'
-                        render={({ field }) => (
-                            <FormItem hidden>
-                                <FormLabel>Lable</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                }
-
-                <FormField
-                    control={form.control}
-                    name='type'
-                    render={({ field }) => (
-                        <FormItem hidden>
-                            <FormLabel>Type</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name='lable'
-                    render={({ field }) => (
-                        <FormItem hidden>
-                            <FormLabel>Lable</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+               
 
                 <SettingCard title='Whatsapp Setting'>
                     <FormField
@@ -156,7 +115,7 @@ const IntegrationSetting = () => {
 
                 <SettingCard title='Tawk.to Setting'>
                     <FormField
-                        control={form.control}
+                        
                         name='value.tawkto.propertyId'
                         render={({ field }) => (
                             <FormItem>
@@ -169,7 +128,7 @@ const IntegrationSetting = () => {
                         )}
                     />
                     <FormField
-                        control={form.control}
+                       
                         name='value.tawkto.widgetId'
                         render={({ field }) => (
                             <FormItem>
@@ -182,7 +141,7 @@ const IntegrationSetting = () => {
                         )}
                     />
                     <FormField
-                        control={form.control}
+                       
                         name="value.tawkto.enabled"
                         render={({ field }) => (
                             <FormItem className="flex flex-col mt-3">
@@ -200,7 +159,7 @@ const IntegrationSetting = () => {
 
 
                 <div className='flex justify-end'>
-                    <Button type="submit" disabled={createSettingMutation.isLoading || updateSettingMutation.isLoading || isLoading}>
+                    <Button type="submit" disabled={createSettingMutation.isLoading || updateSettingMutation.isLoading}>
                         {
                             (createSettingMutation.isLoading || updateSettingMutation.isLoading) ?
                                 <>

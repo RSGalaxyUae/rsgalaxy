@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { services } from '@/data/Services'
 import { nanoid } from 'nanoid'
 import { Button } from '../ui/button'
-import { FacebookIcon, InstagramIcon, LinkedinIcon } from 'lucide-react'
+import { FacebookIcon, InstagramIcon, LinkedinIcon, Loader2 } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { api } from '@/utils/api'
 import { GeneralSettingOutput } from '@/schema/settingSchema'
 import { InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
+import { concatAddress } from '@/lib/utils'
 
 
 
@@ -39,20 +40,31 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center pb-10 px-5">
                 <div className='max-w-xs'>
                     <FooterTitle>Address</FooterTitle>
-                    <div className='flex gap-3'>
-                        <span className='text-gray-500'>Address</span>
-                        <span>{``}</span>
-                    </div>
+                    {
+                        isLoading ?
+                            <div className='my-10 flex items-center justify-center'><Loader2 className='w-10 h-10 text-primary animate-spin' /></div>
+                            : <>
+                                <div className='flex gap-3'>
+                                    <span className='text-gray-500'>Address</span>
+                                    <span>{concatAddress([
+                                        data?.value.contact?.address,
+                                        data?.value.contact?.city,
+                                        data?.value.contact?.country,
+                                        data?.value.contact?.pincode
+                                    ])}</span>
+                                </div>
 
-                    <div className="flex gap-3">
-                        <span className='text-gray-500'>Phone</span>
-                        <span> +971 2 207 2333</span>
-                    </div>
+                                <div className="flex gap-3">
+                                    <span className='text-gray-500'>Phone</span>
+                                    <span> +971 2 207 2333</span>
+                                </div>
 
-                    <div className="flex gap-3">
-                        <span className='text-gray-500'>Email</span>
-                        <span>rsgalaxyuae@gmail.com</span>
-                    </div>
+                                <div className="flex gap-3">
+                                    <span className='text-gray-500'>Email</span>
+                                    <span>rsgalaxyuae@gmail.com</span>
+                                </div>
+                            </>
+                    }
                 </div>
 
                 <div className='grid grid-cols-2'>
@@ -80,11 +92,11 @@ const Footer = () => {
 
                 <div className='w-full'>
                     {/* <FooterTitle>Follow Us</FooterTitle> */}
-                    <div className='flex gap-3 justify-evenly md:justify-center w-full'> 
-                    <Link href={data?.value.socialLinks?.facebook ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.facebook)} ><FacebookIcon className='w-4 h-4'/></Button></Link>
-                        <Link href={data?.value.socialLinks?.twitter ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.twitter)} ><TwitterLogoIcon/></Button></Link>
-                        <Link href={data?.value.socialLinks?.instagram ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.instagram)} ><InstagramLogoIcon/></Button></Link>
-                        <Link href={data?.value.socialLinks?.linkedIn ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.linkedIn)} ><LinkedInLogoIcon/></Button></Link>
+                    <div className='flex gap-3 justify-evenly md:justify-center w-full'>
+                        <Link href={data?.value.socialLinks?.facebook ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.facebook)} ><FacebookIcon className='w-4 h-4' /></Button></Link>
+                        <Link href={data?.value.socialLinks?.twitter ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.twitter)} ><TwitterLogoIcon /></Button></Link>
+                        <Link href={data?.value.socialLinks?.instagram ?? '#'} ><Button disabled={!Boolean(data?.value.socialLinks?.instagram)} ><InstagramLogoIcon /></Button></Link>
+                        <Link href={data?.value.socialLinks?.linkedIn ?? '#'}><Button disabled={!Boolean(data?.value.socialLinks?.linkedIn)} ><LinkedInLogoIcon /></Button></Link>
                     </div>
                 </div>
             </div>

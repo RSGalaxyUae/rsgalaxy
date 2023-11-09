@@ -2,7 +2,7 @@ import React, { type PropsWithChildren } from 'react'
 import Logo from '../shared/Logo'
 import { NavigationMenu, NavigationMenuList, navigationMenuTriggerStyle, NavigationMenuItem, NavigationMenuLink, NavigationMenuTrigger, NavigationMenuContent, } from '../ui/navigation-menu'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import { cn, formatPhoneNumber } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { services } from '@/data/Services'
@@ -79,8 +79,8 @@ const NavLink = ({
       <Link href={href} legacyBehavior passHref>
         <NavigationMenuLink className={cn([
           navigationMenuTriggerStyle(),
-          'tracking-widest uppercase',
-          { 'text-primary hover:text-primary focus:text-primary': router.asPath === href }
+          'tracking-widest uppercase hover:text-primary bg-white/25',
+          { 'text-primary  focus:text-primary bg-white': router.asPath === href }
         ])}>
           {children}
         </NavigationMenuLink>
@@ -93,8 +93,8 @@ const NavLink = ({
 
       className={cn([
         navigationMenuTriggerStyle(),
-        'tracking-widest uppercase',
-        { 'text-primary hover:text-primary': router.asPath === href }
+        'tracking-widest uppercase hover:text-primary bg-white/25',
+        { 'text-primary hover:text-primary bg-white': router.asPath === href }
       ])}
     >{children}</NavigationMenuTrigger>
   )
@@ -132,6 +132,9 @@ const Menu = () => {
         <NavigationMenuItem>
           <NavLink href='/contact'>Contact</NavLink>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavLink href='/docs'>Documents</NavLink>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   )
@@ -153,7 +156,7 @@ const DesktopNav = () => {
             />
           </div>
           <div className=' items-center gap-2 hidden md:flex'>
-            <Button disabled={!Boolean(data?.value.contact?.phone)} className='space-x-2'><PhoneCallIcon /> <span>{data?.value.contact?.phone}</span></Button>
+            <Button disabled={!Boolean(data?.value.contact?.phone && data?.value.contact.phone.length > 0)} className='space-x-2'><PhoneCallIcon /> <span>{formatPhoneNumber(data?.value.contact?.phone[0]?.value??'')}</span></Button>
           </div>
         </div>
       </nav>

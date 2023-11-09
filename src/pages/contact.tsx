@@ -6,6 +6,7 @@ import { type GeneralSettingOutput } from '@/schema/settingSchema';
 import { api } from '@/utils/api'
 import { InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
 import { FacebookIcon, LocateIcon, Mail, Phone } from 'lucide-react';
+import { nanoid } from 'nanoid';
 import Link from 'next/link';
 import React, { type ReactNode } from 'react'
 
@@ -40,8 +41,8 @@ const ContactPage = () => {
             <PageHeader title="Contact Us" image="/assets/images/contact-us-cover.jpg" />
             <section className='py-20 '>
                 <div className="grid grid-cols-1 justify-items-center md:grid-cols-3 container mx-auto">
-                    <CCard title="Email" icon={<Mail className='w-10 h-10 text-primary'/>}>{data?.value.contact?.email}</CCard>
-                    <CCard title="Phone" icon={<Phone className='w-10 h-10 text-primary'/>}>{data?.value.contact?.phone}</CCard>
+                    <CCard title="Email" icon={<Mail className='w-10 h-10 text-primary'/>}>{data?.value.contact?.email.map(em => <p key={nanoid()}>{em.value}</p>)}</CCard>
+                    <CCard title="Phone" icon={<Phone className='w-10 h-10 text-primary'/>}>{data?.value.contact?.phone.map(em => <p key={nanoid()}>{em.value}</p>)}</CCard>
                     <CCard title="Address" icon={<LocateIcon className='w-10 h-10 text-primary'/>}>{`${data?.value.contact?.address}, ${data?.value.contact?.city}, ${data?.value.contact?.country}, (${data?.value.contact?.pincode})`}</CCard>
                 </div>
             </section>
