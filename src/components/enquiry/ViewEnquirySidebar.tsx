@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { Separator } from '../ui/separator'
 import { formateDate } from '@/lib/utils'
+import { EnquiryOut, GeneralEnquiry, ServiceEnquiry } from '@/schema/EnquirySchema'
 
 
 export const InfoSec = ({
@@ -34,7 +35,7 @@ const ViewEnquirySidebar = ({
     enquiry,
     children
 }: {
-    enquiry: Enquiry,
+    enquiry: EnquiryOut<GeneralEnquiry|ServiceEnquiry>,
     children?: ReactNode
 }) => {
 
@@ -61,14 +62,12 @@ const ViewEnquirySidebar = ({
                                     <InfoSec title="Phone">{enquiry.phone}</InfoSec>
                                     <InfoSec title="Message">
                                         <div className='max-w-lg'>
-                                            {/* <p>{enquiry.content as any}</p> */}
+                                            {enquiry.content?.message}
                                         </div>
                                     </InfoSec>
                                     <InfoSec title="Date">
                                         <p>{formateDate(enquiry.createdAt)}</p>
                                     </InfoSec>
-
-
                                 </CardContent>
                             </Card>
                         </div>

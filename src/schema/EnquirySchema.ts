@@ -3,6 +3,7 @@ import { WithPagination } from "./helpers/WithPagination";
 import { WithSearch } from "./helpers/WithSearch";
 import { WithSorting } from "./helpers/WithSorting";
 import { serviceCodesArray } from "@/data/Services";
+import { Enquiry } from "@prisma/client";
 
 export const EnquiryTypesArray = [
     'GENERAL',
@@ -25,6 +26,9 @@ export const ServiceEnquirySchema = z.object({
     serviceId: z.enum(serviceCodesArray),
     message: z.string().optional()
 })
+
+export type GeneralEnquiry = z.TypeOf<typeof GeneralEnquirySchema>;
+export type ServiceEnquiry = z.TypeOf<typeof ServiceEnquirySchema>;
 
 export const EnquiryFilterSchema = z.object({
     type: EnquiryTypeEnumSchema.optional(),
@@ -68,4 +72,10 @@ export const PaginateEnquiryListSchema = WithPagination
                                         .merge(WithSorting)
 
 export type PaginateEnquiryListInput = z.TypeOf<typeof PaginateEnquiryListSchema>;
+
+
+export type EnquiryOut<T> = Omit<Enquiry, 'content'|'type'> & {
+    content: T,
+    type: EnquiryTypes
+}
 

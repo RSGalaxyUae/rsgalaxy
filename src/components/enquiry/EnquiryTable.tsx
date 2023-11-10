@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, {  useState } from 'react'
-import { type PaginateOptions } from 'prisma-pagination'
+import { PaginatedResult, type PaginateOptions } from 'prisma-pagination'
 import {
     Table,
     TableBody,
@@ -30,6 +30,7 @@ import { type Enquiry } from '@prisma/client';
 import DeleteEnquiry from './DeleteEnquiry';
 import { Input } from '../ui/input';
 import { debounce } from 'lodash'
+import { EnquiryOut, GeneralEnquiry, ServiceEnquiry } from '@/schema/EnquirySchema';
 
 
 const EnquiryRowAction = ({
@@ -56,7 +57,7 @@ const EnquiryTable = () => {
     const [enquiryType, setEnquiryType] = useState();
     const [pagination, setPagination] = useState<PaginateOptions>();
     const [search, setSearch] = useState<string>()
-    const { data: EnquiryData, isLoading } = api.enquiry.paginatedList.useQuery({ pagination, type: enquiryType, search });
+    const { data: EnquiryData, isLoading } = api.enquiry.paginatedList.useQuery<PaginatedResult<EnquiryOut<GeneralEnquiry|ServiceEnquiry>>>({ pagination, type: enquiryType, search });
 
     const searchEnquiry = debounce((q) => {
         setSearch(q)
